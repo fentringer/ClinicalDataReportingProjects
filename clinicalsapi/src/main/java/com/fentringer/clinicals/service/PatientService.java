@@ -7,8 +7,8 @@ import com.fentringer.clinicals.repository.PatientRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,8 +21,8 @@ public class PatientService {
         return repository.findAll();
     }
 
-    public Patient getPatientById(int id) {
-        return repository.findById(id).get();
+    public Optional<Patient> getPatientById(int id) {
+        return repository.findById(id);
     }
 
     public Patient savePatient(Patient patient) {
@@ -60,6 +60,9 @@ public class PatientService {
         bmiData.setComponentValue(Float.toString(bmi));
 
         return bmiData;
+    }
 
+    public void deletePatient(int id) {
+        repository.deleteById(id);
     }
 }
