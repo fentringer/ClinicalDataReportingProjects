@@ -13,28 +13,26 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class PatientController {
 
-    private final PatientRepository repository;
     private final PatientService patientService;
 
     @Autowired
-    public PatientController(PatientRepository repository, PatientService patientService) {
-        this.repository = repository;
+    public PatientController(PatientService patientService) {
         this.patientService = patientService;
     }
 
     @GetMapping(value = "/patients")
     public List<Patient> getPatients() {
-        return repository.findAll();
+        return patientService.getPatients();
     }
 
     @GetMapping(value = "/patients/{id}")
     public Patient getPatientById(@PathVariable("id") int id) {
-        return repository.findById(id).get();
+        return patientService.getPatientById(id);
     }
 
     @PostMapping("/patients")
     public Patient savePatient(@RequestBody Patient patient) {
-        return repository.save(patient);
+        return patientService.savePatient(patient);
     }
 
     @GetMapping("/patients/{id}/analyze")

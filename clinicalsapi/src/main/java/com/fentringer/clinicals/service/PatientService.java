@@ -5,6 +5,11 @@ import com.fentringer.clinicals.model.Patient;
 import com.fentringer.clinicals.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +22,22 @@ public class PatientService {
     public PatientService(PatientRepository repository) {
         this.repository = repository;
     }
+
+
+    public List<Patient> getPatients() {
+        return repository.findAll();
+    }
+
+
+    public Patient getPatientById(int id) {
+        return repository.findById(id).get();
+    }
+
+
+    public Patient savePatient(Patient patient) {
+        return repository.save(patient);
+    }
+
 
     public Patient analyzePatient(int id) {
         Patient patient = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Patient not found"));
