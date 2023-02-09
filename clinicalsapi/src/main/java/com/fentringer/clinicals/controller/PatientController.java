@@ -1,43 +1,43 @@
 package com.fentringer.clinicals.controller;
 
+import com.fentringer.clinicals.dto.PatientDto;
 import com.fentringer.clinicals.model.Patient;
-import com.fentringer.clinicals.repository.PatientRepository;
 import com.fentringer.clinicals.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
+@AllArgsConstructor
 public class PatientController {
 
     private final PatientService patientService;
-
-    @Autowired
-    public PatientController(PatientService patientService) {
-        this.patientService = patientService;
-    }
+    private final ModelMapper modelMapper;
 
     @GetMapping(value = "/patients")
-    public List<Patient> getPatients() {
-        return patientService.getPatients();
+    public List<PatientDto> getPatients() {
+        return patientService.getPatients().stream()
+                .map(patient -> modelMapper.map(patient, PatientDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/patients/{id}")
-    public Patient getPatientById(@PathVariable("id") int id) {
-        return patientService.getPatientById(id);
+    public PatientDto getPatientById(@PathVariable("id") int id) {
+        return modelMapper.map(patientService.getPatientById(id), PatientDto.class);
     }
 
     @PostMapping("/patients")
-    public Patient savePatient(@RequestBody Patient patient) {
-        return patientService.savePatient(patient);
+    public PatientDto savePatient(@RequestBody PatientDto patientDto) {
+        return modelMapper.map(patientService.savePatient(modelMapper.map(patientDto, Patient.class)), PatientDto.class);
     }
 
     @GetMapping("/patients/{id}/analyze")
-    public Patient analyzePatient(@PathVariable("id") int id) {
-        return patientService.analyzePatient(id);
+    public PatientDto analyzePatient(@PathVariable("id") int id) {
+        return modelMapper.map(patientService.analyzePatient(id), PatientDto.class);
     }
 
 }

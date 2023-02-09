@@ -1,4 +1,4 @@
-package com.fentringer.clinicals.model;
+package com.fentringer.clinicals.dto;
 
 public class ClinicalDataDTO {
     private String componentName;

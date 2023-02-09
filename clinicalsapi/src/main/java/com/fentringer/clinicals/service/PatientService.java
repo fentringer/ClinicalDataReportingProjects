@@ -1,52 +1,42 @@
 package com.fentringer.clinicals.service;
 
+import com.fentringer.clinicals.dto.PatientDto;
 import com.fentringer.clinicals.model.ClinicalData;
 import com.fentringer.clinicals.model.Patient;
 import com.fentringer.clinicals.repository.PatientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class PatientService {
     private final PatientRepository repository;
-    @Autowired
-    public PatientService(PatientRepository repository) {
-        this.repository = repository;
-    }
-
+    private final ModelMapper modelMapper;
 
     public List<Patient> getPatients() {
         return repository.findAll();
     }
 
-
     public Patient getPatientById(int id) {
         return repository.findById(id).get();
     }
-
 
     public Patient savePatient(Patient patient) {
         return repository.save(patient);
     }
 
-
-    public Patient analyzePatient(int id) {
+    public PatientDto analyzePatient(int id) {
         Patient patient = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Patient not found"));
         List<ClinicalData> clinicalData = patient.getClinicalData();
         List<ClinicalData> updatedClinicalData = clinicalData.stream()
                 .map(this::updateData)
                 .collect(Collectors.toList());
         patient.setClinicalData(updatedClinicalData);
-        return patient;
+        return modelMapper.map(patient, PatientDto.class);
     }
 
     private ClinicalData updateData(ClinicalData data) {
@@ -61,14 +51,15 @@ public class PatientService {
 
     private ClinicalData calculateBmiData(String heightAndWeight) {
         String[] values = heightAndWeight.split("/");
-        if (values.length > 1) {
-            float heightInMetres = Float.parseFloat(values[0]) * 0.4536F;
-            float bmi = Float.parseFloat(values[1]) / (heightInMetres * heightInMetres);
-            ClinicalData bmiData = new ClinicalData();
-            bmiData.setComponentName("bmi");
-            bmiData.setComponentValue(Float.toString(bmi));
-            return bmiData;
-        }
-        return null;
+
+        float heightInMetres = Float.parseFloat(values[0]) * 0.4536F;
+        float bmi = Float.parseFloat(values[1]) / (heightInMetres * heightInMetres);
+
+        ClinicalData bmiData = new ClinicalData();
+        bmiData.setComponentName("bmi");
+        bmiData.setComponentValue(Float.toString(bmi));
+
+        return bmiData;
+
     }
 }

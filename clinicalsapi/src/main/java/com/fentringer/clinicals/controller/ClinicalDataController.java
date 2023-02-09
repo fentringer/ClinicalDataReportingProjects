@@ -1,7 +1,7 @@
 package com.fentringer.clinicals.controller;
 
 import com.fentringer.clinicals.model.ClinicalData;
-import com.fentringer.clinicals.model.ClinicalDataDTO;
+import com.fentringer.clinicals.dto.ClinicalDataDTO;
 import com.fentringer.clinicals.model.Patient;
 import com.fentringer.clinicals.repository.ClinicalDataRepository;
 import com.fentringer.clinicals.repository.PatientRepository;
