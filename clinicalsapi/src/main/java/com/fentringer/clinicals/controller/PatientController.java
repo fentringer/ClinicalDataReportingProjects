@@ -1,25 +1,26 @@
 package com.fentringer.clinicals.controller;
 
-import com.fentringer.clinicals.model.ClinicalData;
 import com.fentringer.clinicals.model.Patient;
 import com.fentringer.clinicals.repository.PatientRepository;
+import com.fentringer.clinicals.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class PatientController {
 
-    @Autowired
-    private PatientRepository repository;
+    private final PatientRepository repository;
+    private final PatientService patientService;
 
-    Map<String, String> filters = new HashMap<>();
+    @Autowired
+    public PatientController(PatientRepository repository, PatientService patientService) {
+        this.repository = repository;
+        this.patientService = patientService;
+    }
 
     @GetMapping(value = "/patients")
     public List<Patient> getPatients() {
@@ -36,35 +37,9 @@ public class PatientController {
         return repository.save(patient);
     }
 
-    @GetMapping(value = "/patients/analyze/{id}")
-    public Patient analyze(@PathVariable("id") int id) {
-        Patient patient = repository.findById(id).get();
-        List<ClinicalData> clinicalData = patient.getClinicalData();
-        List<ClinicalData> duplicateClinicalData = new ArrayList<>(clinicalData);
-
-        for (ClinicalData eachEntry : duplicateClinicalData) {
-            if (filters.containsKey(eachEntry.getComponentName())) {
-                clinicalData.remove(eachEntry);
-                continue;
-            } else {
-                filters.put(eachEntry.getComponentName(), null);
-            }
-
-            if(eachEntry.getComponentName().equals("hw")) {
-                String[] heightAndWeight = eachEntry.getComponentName().split("/");
-                if (heightAndWeight != null && heightAndWeight.length > 1) {
-                    float heightInMetres = Float.parseFloat(heightAndWeight[0]) * 0.4536F;
-                    float bmi = Float.parseFloat(heightAndWeight[1]) / (heightInMetres * heightInMetres);
-                    ClinicalData bmiData = new ClinicalData();
-                    bmiData.setComponentName("bmi");
-                    bmiData.setComponentValue(Float.toString(bmi));
-                    clinicalData.add(bmiData);
-                }
-            }
-
-        }
-        filters.clear();
-        return patient;
+    @GetMapping("/patients/{id}/analyze")
+    public Patient analyzePatient(@PathVariable("id") int id) {
+        return patientService.analyzePatient(id);
     }
 
 }
