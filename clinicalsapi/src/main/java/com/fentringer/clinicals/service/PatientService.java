@@ -7,6 +7,7 @@ import com.fentringer.clinicals.repository.PatientRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,10 +42,7 @@ public class PatientService {
 
     private ClinicalData updateData(ClinicalData data) {
         if (data.getComponentName().equals("hw")) {
-            ClinicalData bmiData = calculateBmiData(data.getComponentValue());
-            if (bmiData != null) {
-                return bmiData;
-            }
+            return calculateBmiData(data.getComponentValue());
         }
         return data;
     }
@@ -65,4 +63,6 @@ public class PatientService {
     public void deletePatient(int id) {
         repository.deleteById(id);
     }
+
+
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import { Doughnut, Bar ,Line} from 'react-chartjs-2';
 
 
 
@@ -13,8 +12,8 @@ class AnalyzeData extends React.Component{
    
     componentWillMount(){
 
-         axios.get('http://localhost:8080/api/patients/analyze/'
-         +this.props.match.params.patientId).then(res=>{
+         axios.get('http://localhost:8080/api/patients/' + this.props.match.params.patientId + '/analyze'
+        ).then(res=>{
              console.log(res.data)
             this.setState(res.data)
             console.log(this.state)
@@ -50,7 +49,7 @@ class RowCreator extends React.Component{
             <td>{eachEntry.componentValue}</td>
             <td>{eachEntry.measuredDateTime}</td>
             <td><Link to={'/chart/'+eachEntry.componentName+'/'+patientId}>
-            <img src={require('../Logo.png')} height='20' widtch='20'/></Link>
+            <img alt='' src={require('../Logo.png')} height='20' widtch='20'/></Link>
             </td>
         </tr>
         </table>
