@@ -37,8 +37,7 @@ class ChartGenerator extends React.Component{
    
     componentWillMount(){
 
-         axios.get('http://localhost:8080/api/patients/analyze/'
-         +this.props.match.params.patientId).then(res=>{
+         axios.get('http://localhost:8080/api/patients/'+this.props.match.params.patientId + '/analyze').then(res=>{
              console.log(res.data)
             this.setState(res.data)
             console.log(this.state)

@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class PatientController {
     @GetMapping("/patients/{id}")
     public ResponseEntity<PatientDto> getPatientById(@PathVariable("id") int id) {
         Optional<Patient> patient = patientService.getPatientById(id);
-        return patient.map(value -> new ResponseEntity<>(modelMapper.map(value, PatientDto.class),HttpStatus.OK))
+        return patient.map(value -> new ResponseEntity<>(modelMapper.map(value, PatientDto.class), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -52,7 +53,7 @@ public class PatientController {
         return ResponseEntity.ok(modelMapper.map(analyzedPatient, PatientDto.class));
     }
 
-    @DeleteMapping("/patients/{id}")
+    @DeleteMapping("/patients/delete/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable("id") int id) {
         Optional<Patient> patient = patientService.getPatientById(id);
         if (!patient.isPresent()) {

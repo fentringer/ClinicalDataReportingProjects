@@ -13,7 +13,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-       <Switch>
+       <Switch  key={1}>
         <Route exact path="/" component={Home}/>
         <Route exact path="/findPatients" component={FindPatients}/>
         <Route exact path="/displayPatients/:firstName/:lastName" component={DisplayPatients}/>
