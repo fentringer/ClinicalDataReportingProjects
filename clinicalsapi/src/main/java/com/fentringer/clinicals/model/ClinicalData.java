@@ -22,6 +22,14 @@ public class ClinicalData {
     @JsonIgnore
     private Patient patient;
 
+    public ClinicalData() {
+    }
+
+    public ClinicalData(String componentName, String componentValue) {
+        this.componentName = componentName;
+        this.componentValue = componentValue;
+    }
+
     public Patient getPatient() {
         return patient;
     }

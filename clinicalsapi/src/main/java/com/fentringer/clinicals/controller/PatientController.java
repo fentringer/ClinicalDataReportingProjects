@@ -45,7 +45,7 @@ public class PatientController {
 
     @GetMapping("/patients/{id}/analyze")
     public ResponseEntity<PatientDto> analyzePatient(@PathVariable("id") int id) {
-        PatientDto analyzedPatient = patientService.analyzePatient(id);
+        PatientDto analyzedPatient = patientService.getPatientWithUpdatedClinicalData(id);
         if (analyzedPatient == null) {
             return ResponseEntity.notFound().build();
         }
